@@ -4,9 +4,9 @@ This library contains utilities that are useful when working with JavaScript reg
 The functions are not exported as default, so you can import them in one of the following ways:
 ```
 // ES6
-import { functionName } from '@ptolemy2002/js-utils';
+import { functionName } from '@ptolemy2002/regex-utils';
 // CommonJS
-const { functionName } = require('@ptolemy2002/js-utils');
+const { functionName } = require('@ptolemy2002/regex-utils');
 ```
 
 ## Functions
