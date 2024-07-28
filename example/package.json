@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "repository": {
-        "type": "git",
-        "url": "www.github.com",
-        "directory": "example"
+    "type": "git",
+    "url": "https://github.com/Ptolemy2002/regex-utils",
+    "directory": "example"
   },
   "dependencies": {
-    "@local/lib": "file:../lib",
+    "@ptolemy2002/regex-utils": "file:../lib",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "ajv": "^8.17.1",
@@ -42,5 +42,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {}
 }
