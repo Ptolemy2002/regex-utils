@@ -26,8 +26,10 @@
     },
     "description": "Utilities for working with regular expressions",
     "license": "ISC",
-    "peerDependencies": {},
     "devDependencies": {
         "esbuild": "^0.23.0"
+    },
+    "dependencies": {
+        "zod": "^3.23.8"
     }
 }

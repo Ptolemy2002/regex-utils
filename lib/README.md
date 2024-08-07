@@ -109,9 +109,23 @@ Checks if a string is a valid set of regular expression flags.
 #### Returns
 `Boolean` - `true` if the string is a valid set of regular expression flags, `false` otherwise.
 
+### zodValidate
+#### Description
+This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns whatever error message the zod schema provides by default, or `false` if the `returnError` flag is disabled.
+
+#### Parameters
+- `p` (`ZodSchema`): The zod schema to be used for validation.
+- `returnError` (`Boolean`): Whether to return the error message if the value does not match the schema. Default is `true`. If `false`, the function will return `false` on failure instead.
+
+#### Returns
+`Function` - A function that takes a value and returns `true` if the value matches the schema, an error message if the value does not match the schema and `returnError` is `true`, or `false` if the value does not match the schema and `returnError` is `false`.
+
+#### Returns
+`Function` - A function that takes a value and returns `true` if the value matches the schema, or an error message otherwise.
+
 ### isAlphanumeric
 #### Description
-Checks if a string is alphanumeric, that is, if it only contains letters, numbers, dashes, and underscores. Empty strings are not considered alphanumeric.
+Uses `zodValidate` to check if a string is alphanumeric, that is, if it only contains letters, numbers, dashes, and underscores. Empty strings are not considered alphanumeric.
 
 #### Parameters
 - `str` (`String`): The value to be checked.
@@ -132,7 +146,7 @@ Transforms a string to be alphanumeric by removing accents, separating it by non
 
 ### isValidEmail
 #### Description
-Attempts to check if a string is a valid email address. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
+Uses `zodValidate` to check if a string is a valid email address. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
 
 #### Parameters
 - `value` (`String`): The value to be checked.
@@ -142,7 +156,7 @@ Attempts to check if a string is a valid email address. Note that this is a simp
 
 ### isValidPhoneNumber
 #### Description
-Attempts to check if a string is a valid phone number. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
+Uses `zodValidate` to check if a string is a valid phone number. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
 
 #### Parameters
 - `value` (`String`): The value to be checked.
@@ -152,7 +166,7 @@ Attempts to check if a string is a valid phone number. Note that this is a simpl
 
 ### isValidURL
 #### Description
-Attempts to check if a string is a valid URL. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
+Uses `zodValidate` to check if a string is a valid URL. Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
 
 #### Parameters
 - `value` (`String`): The value to be checked.
@@ -162,7 +176,7 @@ Attempts to check if a string is a valid URL. Note that this is a simple check a
 
 ### isValidSSN
 #### Description
-Attempts to check if a string is a valid Social Security Number (SSN). Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
+Uses `zodValidate` to check if a string is a valid Social Security Number (SSN). Note that this is a simple check and may not cover all cases, but it should be good enough for most purposes.
 
 #### Parameters
 - `value` (`String`): The value to be checked.
