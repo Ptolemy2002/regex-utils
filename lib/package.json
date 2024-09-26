@@ -6,7 +6,7 @@
         "index.js"
     ],
     "scripts": {
-        "build": "esbuild src/index.js --bundle --format=cjs --outfile=index.js --loader:.js=jsx --external:react --external:react-dom --external:@types/react --external:@types/react-dom",
+        "build": "esbuild src/index.js --bundle --format=cjs --outfile=index.js --loader:.js=jsx --external:zod",
         "postinstall": "npx typesync",
         "uninstall": "bash ./scripts/uninstall.sh",
         "reinstall": "bash ./scripts/reinstall.sh",
@@ -29,7 +29,7 @@
     "devDependencies": {
         "esbuild": "^0.23.0"
     },
-    "dependencies": {
+    "peerDependencies": {
         "zod": "^3.23.8"
     }
 }

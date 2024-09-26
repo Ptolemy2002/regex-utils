@@ -188,7 +188,8 @@ Uses `zodValidate` to check if a string is a valid Social Security Number (SSN).
 This is a React Library Created by Ptolemy2002's [cra-template-react-library](https://www.npmjs.com/package/@ptolemy2002/cra-template-react-library) template in combination with [create-react-app](https://www.npmjs.com/package/create-react-app). However, it does not actually depend on React - it has been modified to work out of the box. It contains methods of building and publishing your library to npm.
 
 ## Peer Dependencies
-This project does not have any peer dependencies, so it should work out of the box.
+These should be installed in order to use the library, as npm does not automatically add peer dependencies to your project.
+- zod: ^3.23.8
 
 ## Commands
 The following commands exist in the project:
