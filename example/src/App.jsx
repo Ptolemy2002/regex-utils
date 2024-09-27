@@ -1,8 +1,28 @@
 import { useState } from "react";
 import {
     escapeRegex, removeAccents, transformRegex, isValidRegex, isValidRegexFlags, isAlphanumeric, toAlphanumeric,
-    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN
+    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN, zodValidate
 } from "@ptolemy2002/regex-utils";
+import { z } from "zod";
+
+window.testValidation = (v) => {
+    return zodValidate(
+        z.object(
+            {
+                required: z.any().refine((v) => v !== undefined, {message: "required is missing"}),
+
+                string: z.string({message: "invalid string"}).optional(),
+                number: z.number({message: "invalid number"}).optional(),
+                boolean: z.boolean({message: "invalid boolean"}).optional(),
+                date: z.date({message: "invalid date"}).optional(),
+                array: z.string({message: "invalid array item"}).array().optional(),
+                object: z.object({}, {message: "invalid object"}).optional(),
+                union: z.union([z.string(), z.number()], {message: "invalid union"}).optional()
+            },
+            {message: "invalid value type"}
+        )
+    )(v);
+}
 
 function App() {
     const [text, setText] = useState("");
@@ -33,6 +53,10 @@ function App() {
 
     return (
         <div className="App p-3">
+            <p>
+                Use window.testValidation to test the zodValidate function.
+            </p>
+
             <label>Text: </label>
             <input
                 type="text"
