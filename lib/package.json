@@ -1,12 +1,19 @@
 {
     "name": "@ptolemy2002/regex-utils",
     "version": "1.2.1",
-    "main": "index.js",
+    "private": true,
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
-        "index.js"
+        "/dist"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Ptolemy2002/regex-utils",
+        "directory": "lib"
+    },
     "scripts": {
-        "build": "esbuild src/index.js --bundle --format=cjs --outfile=index.js --loader:.js=jsx --external:zod",
+        "build": "tsc --project ./tsconfig.json",
         "postinstall": "npx typesync",
         "uninstall": "bash ./scripts/uninstall.sh",
         "reinstall": "bash ./scripts/reinstall.sh",
@@ -19,17 +26,10 @@
         "release-minor": "bash ./scripts/release.sh minor",
         "release-major": "bash ./scripts/release.sh major"
     },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Ptolemy2002/regex-utils",
-        "directory": "lib"
-    },
-    "description": "Utilities for working with regular expressions",
-    "license": "ISC",
-    "devDependencies": {
-        "esbuild": "^0.23.0"
-    },
     "peerDependencies": {
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
         "zod": "^3.23.8"
     }
 }

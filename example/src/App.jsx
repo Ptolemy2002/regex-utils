@@ -1,28 +1,32 @@
 import { useState } from "react";
 import {
     escapeRegex, removeAccents, transformRegex, isValidRegex, isValidRegexFlags, isAlphanumeric, toAlphanumeric,
-    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN, zodValidate
+    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN, zodValidate, zodValidateWithErrors
 } from "@ptolemy2002/regex-utils";
 import { z } from "zod";
 
-window.testValidation = (v) => {
-    return zodValidate(
-        z.object(
-            {
-                required: z.any().refine((v) => v !== undefined, {message: "required is missing"}),
+const testValidationSchema = z.object(
+    {
+        required: z.any().refine((v) => v !== undefined, {message: "required is missing"}),
 
-                string: z.string({message: "invalid string"}).optional(),
-                number: z.number({message: "invalid number"}).optional(),
-                boolean: z.boolean({message: "invalid boolean"}).optional(),
-                date: z.date({message: "invalid date"}).optional(),
-                array: z.string({message: "invalid array item"}).array().optional(),
-                object: z.object({}, {message: "invalid object"}).optional(),
-                union: z.union([z.string(), z.number()], {message: "invalid union"}).optional()
-            },
-            {message: "invalid value type"}
-        )
-    )(v);
-}
+        string: z.string({message: "invalid string"}).optional(),
+        number: z.number({message: "invalid number"}).optional(),
+        boolean: z.boolean({message: "invalid boolean"}).optional(),
+        date: z.date({message: "invalid date"}).optional(),
+        array: z.string({message: "invalid array item"}).array().optional(),
+        object: z.object({}, {message: "invalid object"}).optional(),
+        union: z.union([z.string(), z.number()], {message: "invalid union"}).optional()
+    },
+    {message: "invalid value type"}
+);
+
+window.testValidation = (v) => {
+    return zodValidate(testValidationSchema)(v);
+};
+
+window.testValidationWithErrors = (v) => {
+    return zodValidateWithErrors(testValidationSchema)(v);
+};
 
 function App() {
     const [text, setText] = useState("");
