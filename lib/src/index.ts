@@ -82,7 +82,7 @@ export function transformRegex(value: RegexInput, {
     accentInsensitive=false,
     caseInsensitive=false,
     matchWhole=false
-}: TransformRegexOptions): RegExp {
+}: TransformRegexOptions = {}): RegExp {
     if (accentInsensitive) value = regexAccentInsensitive(value, flags);
     if (caseInsensitive) value = regexCaseInsensitive(value, flags);
     if (matchWhole) value = regexMatchWhole(value, flags);
