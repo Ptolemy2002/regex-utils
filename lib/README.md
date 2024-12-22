@@ -125,6 +125,16 @@ Checks if a string is a valid set of regular expression flags.
 #### Returns
 `boolean` - `true` if the string is a valid set of regular expression flags, `false` otherwise.
 
+### interpretZodError
+#### Description
+Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors.
+
+#### Parameters
+- `e` (`ZodError`): The zod error to be interpreted.
+
+#### Returns
+`string | string[] | null` - The interpreted error message(s).
+
 ### zodValidate<O>
 #### Description
 This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns `false`. `O` refers to the output type of the zod schema, which should be the same as its input type.
@@ -137,7 +147,7 @@ This is a simple function that takes a zod schema, returning a function that tak
 
 ### zodValidateWithErrors<O>
 #### Description
-This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns a single error message or an array of error messages if there are multiple errors. `O` refers to the output type of the zod schema, which should be the same as its input type.
+This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns the result of `interpretZodError` on the error. `O` refers to the output type of the zod schema, which should be the same as its input type.
 
 #### Parameters
 - `p` (`ZodSchema<O>`): The zod schema to be used for validation.

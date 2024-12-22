@@ -1,4 +1,4 @@
-import { z, ZodSchema } from "zod";
+import { z, ZodError, ZodSchema } from "zod";
 
 export type RegexInput = string | RegExp;
 
@@ -112,6 +112,13 @@ export function isValidRegexFlags(value: string): boolean {
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
 
+export function interpretZodError(e: ZodError): string | string[] | null {
+    const { errors } = e;
+    if (errors.length === 0) return null;
+    if (errors.length === 1) return e.errors[0].message;
+    return errors.map((e) => e.message);
+}
+
 export function zodValidate<O>(
     p: ZodSchema<O>,
 ): ZodValidator<O> {
@@ -128,8 +135,7 @@ export function zodValidateWithErrors<O>(
         const result = p.safeParse(v);
         if (result.success) return true;
 
-        if (result.error.errors.length === 1) return result.error.errors[0].message;
-        return result.error.errors.map((e) => e.message);
+        return interpretZodError(result.error)!;
     }
 }
 
