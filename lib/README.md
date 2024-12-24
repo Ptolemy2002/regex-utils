@@ -216,6 +216,15 @@ Uses `zodValidate` to check if a string is a valid Social Security Number (SSN).
 #### Returns
 `boolean` - `true` if the string is a valid SSN, `false` otherwise.
 
+## Schemas
+The following schemas are available in the library:
+
+### ZodCoercedBooleanEnum
+A zod schema that specifies an enum of strings that can be interpreted as booleans. This is used within `ZodCoercedBoolean` to actually perform the coercion.
+
+### ZodCoercedBoolean
+A zod schema that takes in a value accepted by `ZodCoercedBooleanEnum` and coerces it to a boolean. This is useful when you want to accept multiple values that can be interpreted as booleans.
+
 ## Peer Dependencies
 These should be installed in order to use the library, as npm does not automatically add peer dependencies to your project.
 - zod: ^3.23.8

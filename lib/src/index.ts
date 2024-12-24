@@ -174,3 +174,31 @@ export function isValidPhoneNumber(v: string): boolean {
 export function isValidSSN(v: string): boolean {
     return zodValidate(z.coerce.string().regex(/^\d{3}-?\d{2}-?\d{4}$/))(v);
 }
+
+export const ZodCoercedBooleanEnum = z.enum([
+    "true", "false",
+    "t", "f",
+    "yes", "no",
+    "y", "n",
+    "1", "0",
+    "on", "off"
+]);
+
+export const ZodCoercedBoolean = ZodCoercedBooleanEnum.transform((val) => {
+  switch (val) {
+    case "true":
+    case "t":
+    case "yes":
+    case "y":
+    case "1":
+    case "on":
+      return true;
+    case "false":
+    case "f":
+    case "no":
+    case "n":
+    case "0":
+    case "off":
+      return false;
+  }
+});
