@@ -126,8 +126,12 @@ export function interpretZodError(e: ZodError): string | string[] | null {
     return errors.map((e) => formatIssue(e));
 }
 
+export type ZodSafeParseable<O> = {
+    safeParse: (v: unknown) => { success: boolean, data?: O, error?: ZodError };
+};
+
 export function zodValidate<O>(
-    p: ZodSchema<O>,
+    p: ZodSafeParseable<O>,
 ): ZodValidator<O> {
     return (v) => {
         const result = p.safeParse(v);
@@ -136,7 +140,7 @@ export function zodValidate<O>(
 }
 
 export function zodValidateWithErrors<O>(
-    p: ZodSchema<O>,
+    p: ZodSafeParseable<O>,
 ): ZodValidatorWithErrors<O> {
     return (v) => {
         const result = p.safeParse(v);

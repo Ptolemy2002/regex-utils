@@ -20,6 +20,9 @@ type TransformRegexOptions = {
 };
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
+export type ZodSafeParseable<O> = {
+    safeParse: (v: unknown) => { success: boolean, data?: O, error?: ZodError };
+};
 ```
 
 ## Functions
@@ -140,7 +143,7 @@ Given a zod error, interprets it to `null` if no error is found, a single error 
 This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns `false`. `O` refers to the output type of the zod schema, which should be the same as its input type.
 
 #### Parameters
-- `p` (`ZodSchema<O>`): The zod schema to be used for validation.
+- `p` (`ZodSafeParseable<O>`): The zod schema to be used for validation.
 
 #### Returns
 `ZodValidator<O>` - A function that takes a value and returns `true` if the value matches the schema, `false` otherwise.
@@ -150,7 +153,7 @@ This is a simple function that takes a zod schema, returning a function that tak
 This is a simple function that takes a zod schema, returning a function that takes a value. If the value matches, the function returns `true`. Otherwise, it returns the result of `interpretZodError` on the error. `O` refers to the output type of the zod schema, which should be the same as its input type.
 
 #### Parameters
-- `p` (`ZodSchema<O>`): The zod schema to be used for validation.
+- `p` (`ZodSafeParseable<O>`): The zod schema to be used for validation.
 
 #### Returns
 `ZodValidatorWithErrors<O>` - A function that takes a value and returns `true` if the value matches the schema, an error message if there is a single error, or an array of error messages if there are multiple errors.
