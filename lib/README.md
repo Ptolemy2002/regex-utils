@@ -127,7 +127,7 @@ Checks if a string is a valid set of regular expression flags.
 
 ### interpretZodError
 #### Description
-Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors.
+Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors. The error messages will be in the format `<path>: <message>`.
 
 #### Parameters
 - `e` (`ZodError`): The zod error to be interpreted.
