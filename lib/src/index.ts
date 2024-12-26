@@ -127,7 +127,7 @@ export function interpretZodError(e: ZodError): string | string[] | null {
 }
 
 export type ZodSafeParseable<O> = {
-    safeParse: (v: unknown) => { success: boolean, data?: O, error?: ZodError };
+    safeParse: (v: unknown) => z.SafeParseReturnType<unknown, O>;
 };
 
 export function zodValidate<O>(
