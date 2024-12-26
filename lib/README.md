@@ -21,7 +21,7 @@ type TransformRegexOptions = {
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
 export type ZodSafeParseable<O> = {
-    safeParse: (v: unknown) => { success: boolean, data?: O, error?: ZodError };
+    safeParse: (v: unknown) => z.SafeParseReturnType<unknown, O>;
 };
 ```
 
