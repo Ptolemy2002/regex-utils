@@ -141,12 +141,21 @@ export function zodValidate<O>(
 
 export function zodValidateWithErrors<O>(
     p: ZodSafeParseable<O>,
+    _throw = false,
 ): ZodValidatorWithErrors<O> {
     return (v) => {
         const result = p.safeParse(v);
         if (result.success) return true;
 
-        return interpretZodError(result.error)!;
+        const error = interpretZodError(result.error)!;
+        if (_throw) {
+            if (Array.isArray(error)) {
+                throw new Error(error.join("\n"));
+            } else {
+                throw new Error(error);
+            }
+        }
+        return error;
     }
 }
 

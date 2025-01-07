@@ -154,6 +154,7 @@ This is a simple function that takes a zod schema, returning a function that tak
 
 #### Parameters
 - `p` (`ZodSafeParseable<O>`): The zod schema to be used for validation.
+- `_throw` (`boolean`): Whether to throw an error if the value does not match the schema. If true, errors will be delimited by newlines. Default is `false`.
 
 #### Returns
 `ZodValidatorWithErrors<O>` - A function that takes a value and returns `true` if the value matches the schema, an error message if there is a single error, or an array of error messages if there are multiple errors.
