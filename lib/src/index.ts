@@ -112,11 +112,19 @@ export function isValidRegexFlags(value: string): boolean {
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
 
-export function interpretZodError(e: ZodError): string | string[] | null {
+export function interpretZodError(e: ZodError, prefix?: string | string[]): string | string[] | null {
     const { errors } = e;
 
     function formatIssue(issue: ZodIssue) {
-        const { path, message } = issue;
+        const { path: _path, message } = issue;
+        let path = _path;
+
+        if (typeof prefix === "string") {
+            path = [prefix, ...path];
+        } else if (Array.isArray(prefix)) {
+            path = [...prefix, ...path];
+        }
+
         if (path.length === 0) return message;
         return `${path.join(".")}: ${message}`;
     }
@@ -139,22 +147,28 @@ export function zodValidate<O>(
     }
 }
 
+export class ZodInterpretedError extends Error {
+    zodMessage: string | string[] | null;
+    joinSeparator: string;
+
+    constructor(message: string | string[] | null = null, joinSeparator = "\n") {
+        super(Array.isArray(message) ? message.join(joinSeparator) : message ?? undefined);
+        this.zodMessage = message;
+        this.joinSeparator = joinSeparator;
+    }
+}
+
 export function zodValidateWithErrors<O>(
     p: ZodSafeParseable<O>,
     _throw = false,
+    joinSeparator = "\n"
 ): ZodValidatorWithErrors<O> {
     return (v) => {
         const result = p.safeParse(v);
         if (result.success) return true;
 
         const error = interpretZodError(result.error)!;
-        if (_throw) {
-            if (Array.isArray(error)) {
-                throw new Error(error.join("\n"));
-            } else {
-                throw new Error(error);
-            }
-        }
+        if (_throw) throw new ZodInterpretedError(error, joinSeparator);
         return error;
     }
 }
