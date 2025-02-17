@@ -112,7 +112,16 @@ export function isValidRegexFlags(value: string): boolean {
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
 
-export function interpretZodError(e: ZodError, prefix?: string | string[]): string | string[] | null {
+export type InterpretZodErrorOptions = {
+    prefix?: string | string[];
+    separator?: string;
+};
+
+export function interpretZodError(e: ZodError, 
+    {
+        prefix,
+        separator = "."
+    }: InterpretZodErrorOptions): string | string[] | null {
     const { errors } = e;
 
     function formatIssue(issue: ZodIssue) {
@@ -126,7 +135,7 @@ export function interpretZodError(e: ZodError, prefix?: string | string[]): stri
         }
 
         if (path.length === 0) return message;
-        return `${path.join(".")}: ${message}`;
+        return `${path.join(separator)}: ${message}`;
     }
 
     if (errors.length === 0) return null;
@@ -147,29 +156,45 @@ export function zodValidate<O>(
     }
 }
 
+export type ZodValidateWithErrorsOptions = {
+    _throw?: boolean;
+    prefix?: string | string[];
+    joinSeparator?: string;
+    pathSeparator?: string;
+};
+
 export class ZodInterpretedError extends Error {
     zodMessage: string | string[] | null;
+    prefix: string | string[] | undefined;
     joinSeparator: string;
 
-    constructor(message: string | string[] | null = null, joinSeparator = "\n") {
+    constructor(message: ZodError | string | string[] | null = null, {
+        prefix, joinSeparator = "\n", pathSeparator = "."
+    }: ZodValidateWithErrorsOptions = {}) {
+        if (message instanceof ZodError) message = interpretZodError(message, { prefix, separator: pathSeparator });
         super(Array.isArray(message) ? message.join(joinSeparator) : message ?? undefined);
         this.zodMessage = message;
+        this.prefix = prefix;
         this.joinSeparator = joinSeparator;
     }
 }
 
 export function zodValidateWithErrors<O>(
     p: ZodSafeParseable<O>,
-    _throw = false,
-    joinSeparator = "\n"
+    {
+        _throw = false,
+        prefix,
+        joinSeparator = "\n",
+        pathSeparator = "."
+    }: ZodValidateWithErrorsOptions = {}
 ): ZodValidatorWithErrors<O> {
     return (v) => {
-        const result = p.safeParse(v);
-        if (result.success) return true;
+        const { success, error: error } = p.safeParse(v);
+        if (success) return true;
 
-        const error = interpretZodError(result.error)!;
-        if (_throw) throw new ZodInterpretedError(error, joinSeparator);
-        return error;
+        const zError = new ZodInterpretedError(error, { prefix, joinSeparator, pathSeparator });
+        if (_throw) throw zError;
+        return zError.zodMessage ?? "";
     }
 }
 

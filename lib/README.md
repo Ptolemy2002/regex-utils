@@ -18,10 +18,20 @@ type TransformRegexOptions = {
     accentInsensitive?: boolean;
     matchWhole?: boolean;
 };
-export type ZodValidator<O> = (v: O) => boolean;
-export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
-export type ZodSafeParseable<O> = {
+type ZodValidator<O> = (v: O) => boolean;
+type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
+type ZodSafeParseable<O> = {
     safeParse: (v: unknown) => z.SafeParseReturnType<unknown, O>;
+};
+type InterpretZodErrorOptions = {
+    prefix?: string | string[];
+    separator?: string;
+};
+type ZodValidateWithErrorsOptions = {
+    _throw?: boolean;
+    prefix?: string | string[];
+    joinSeparator?: string;
+    pathSeparator?: string;
 };
 ```
 
@@ -33,8 +43,10 @@ The following classes are available in the library:
 A custom error class that is used to represent errors that have been interpreted from a zod error. It takes in either a single error or an array of errors, combining them in the `message` property, but keeping the original errors in the `zodMessage` property.
 
 #### Properties
-- `zodMessage` (`string | string[] | null`): The interpreted error message(s). If not specified, this will be `null`, but the `message` property itself will be `undefined`.
-- `joinSeparator?` (`string`): The separator to be used when joining multiple errors. Default is `'\n'`.
+- `zodMessage` (`string | string[] | null`): The interpreted error message(s). If not specified, this will be `null`, but the `message` property itself will be `undefined`. The class can be constructed with a `ZodError` object to automatically interpret the error.
+- `prefix` (`string | string[]`): A prefix to be added to the path. If an array is passed, the elements will be joined by `pathSeparator`. If not specified, the path will be used as is.
+- `separator` (`string`): The separator to be used when joining multiple errors. Default is `'\n'`.
+
 
 ## Functions
 The following functions are available in the library:
@@ -145,7 +157,9 @@ Given a zod error, interprets it to `null` if no error is found, a single error 
 
 #### Parameters
 - `e` (`ZodError`): The zod error to be interpreted.
-- `prefix?` (`string | string[]`): A prefix to be added to the path. If an array is passed, the elements will be joined by a period. If not specified, the path will be used as is.
+- `options` (`InterpretZodErrorOptions`): Used to specify optional arguments.
+    - `prefix?` (`string | string[]`): A prefix to be added to the path. If an array is passed, the elements will be joined by `separator`. If not specified, the path will be used as is.
+    - `separator` (`string`): The separator to be used when joining the path nodes. Default is `'.'`.
 
 #### Returns
 `string | string[] | null` - The interpreted error message(s).
@@ -166,8 +180,10 @@ This is a simple function that takes a zod schema, returning a function that tak
 
 #### Parameters
 - `p` (`ZodSafeParseable<O>`): The zod schema to be used for validation.
-- `_throw` (`boolean`): Whether to throw a `ZodInterpretedError` if the value does not match the schema. If true, errors will be delimited by the `joinSeparator` value. Default is `false`.
-- `joinSeparator` (`string`): The separator to be used when joining multiple errors. Default is `'\n'`.
+- `options` (`ZodValidateWithErrorsOptions`): Used to specify optional arguments.
+    - `_throw` (`boolean`): Whether to throw a `ZodInterpretedError` if the value does not match the schema. If true, errors will be delimited by the `joinSeparator` value. Default is `false`.
+    - `prefix?` (`string | string[]`): A prefix to be added to the path. If an array is passed, the elements will be joined by a period. If not specified, the path will be used as is.
+    - `joinSeparator` (`string`): The separator to be used when joining multiple errors. Default is `'\n'`.
 
 #### Returns
 `ZodValidatorWithErrors<O>` - A function that takes a value and returns `true` if the value matches the schema, an error message if there is a single error, or an array of error messages if there are multiple errors.
