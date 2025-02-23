@@ -121,18 +121,31 @@ export function interpretZodError(e: ZodError,
     {
         prefix,
         separator = "."
-    }: InterpretZodErrorOptions): string | string[] | null {
+    }: InterpretZodErrorOptions = {}): string | string[] | null {
     const { errors } = e;
 
     function formatIssue(issue: ZodIssue) {
-        const { path: _path, message } = issue;
+        const { code, path: _path, message } = issue;
         let path = _path;
-
+        
+        
         if (typeof prefix === "string") {
             path = [prefix, ...path];
         } else if (Array.isArray(prefix)) {
             path = [...prefix, ...path];
         }
+
+        if (code === "invalid_return_type") {
+            const returnTypeIssue = issue.returnTypeError.errors[0];
+            path = [...path, "returnType", ...returnTypeIssue.path];
+
+            return `${path.join(separator)}: ${returnTypeIssue.message}`;
+        } else if (code === "invalid_arguments") {
+            const argumentsIssue = issue.argumentsError.errors[0];
+            path = [...path, "arguments", ...argumentsIssue.path];
+
+            return `${path.join(separator)}: ${argumentsIssue.message}`;
+        } 
 
         if (path.length === 0) return message;
         return `${path.join(separator)}: ${message}`;

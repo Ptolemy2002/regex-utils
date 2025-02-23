@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
     escapeRegex, removeAccents, transformRegex, isValidRegex, isValidRegexFlags, isAlphanumeric, toAlphanumeric,
-    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN, zodValidate, zodValidateWithErrors
+    isValidEmail, isValidPhoneNumber, isValidURL, isValidSSN, zodValidate, zodValidateWithErrors,
+    interpretZodError
 } from "@ptolemy2002/regex-utils";
 import { z } from "zod";
 
@@ -15,17 +16,46 @@ const testValidationSchema = z.object(
         date: z.date({message: "invalid date"}).optional(),
         array: z.string({message: "invalid array item"}).array().optional(),
         object: z.object({}, {message: "invalid object"}).optional(),
-        union: z.union([z.string(), z.number()], {message: "invalid union"}).optional()
+        union: z.union([z.string(), z.number()], {message: "invalid union"}).optional(),
+        function: z.function()
+            .args(z.string())
+            .returns(z.number())
+            .optional()
     },
     {message: "invalid value type"}
 );
 
-window.testValidation = (v) => {
-    return zodValidate(testValidationSchema)(v);
+window.testValidation = (v, invalidArg=false) => {
+    let success = zodValidate(testValidationSchema)(v);
+    if (success) {
+        const data = testValidationSchema.parse(v);
+        if (data.function) {
+            try {
+                data.function(invalidArg ? 1 : "test");
+            } catch (e) {
+                success = false;
+            }
+        }
+    }
+
+    return success;
 };
 
-window.testValidationWithErrors = (v) => {
-    return zodValidateWithErrors(testValidationSchema)(v);
+window.testValidationWithErrors = (v, invalidArg=false) => {
+    let error = zodValidateWithErrors(testValidationSchema)(v);
+
+    if (error === true) {
+        const data = testValidationSchema.parse(v);
+        if (data.function) {
+            try {
+                data.function(invalidArg ? 1 : "test");
+            } catch (e) {
+                error = interpretZodError(e);
+            }
+        }
+    }
+
+    return error;
 };
 
 function App() {
