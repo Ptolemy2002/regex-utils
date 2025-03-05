@@ -112,6 +112,12 @@ export function isValidRegexFlags(value: string): boolean {
 export type ZodValidator<O> = (v: O) => boolean;
 export type ZodValidatorWithErrors<O> = (v: O) => true | string | string[];
 
+export function isZodError(err: unknown): err is ZodError {
+    return Boolean(
+        err && (err instanceof ZodError || (err as ZodError).name === 'ZodError'),
+    );
+}
+
 export type InterpretZodErrorOptions = {
     prefix?: string | string[];
     separator?: string;
@@ -184,7 +190,7 @@ export class ZodInterpretedError extends Error {
     constructor(message: ZodError | string | string[] | null = null, {
         prefix, joinSeparator = "\n", pathSeparator = "."
     }: ZodValidateWithErrorsOptions = {}) {
-        if (message instanceof ZodError) message = interpretZodError(message, { prefix, separator: pathSeparator });
+        if (isZodError(message)) message = interpretZodError(message, { prefix, separator: pathSeparator });
         super(Array.isArray(message) ? message.join(joinSeparator) : message ?? undefined);
         this.zodMessage = message;
         this.prefix = prefix;
