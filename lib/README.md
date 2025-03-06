@@ -151,6 +151,16 @@ Checks if a string is a valid set of regular expression flags.
 #### Returns
 `boolean` - `true` if the string is a valid set of regular expression flags, `false` otherwise.
 
+### isZodError
+#### Description
+Checks if an unknown value is a ZodError. This is more reliable than using `instanceof` as it also checks for the name property. This is particularly important in projects with multiple versions of zod, where instanceof checks may fail due to different constructor references.
+
+#### Parameters
+- `err` (`unknown`): The value to be checked.
+
+#### Returns
+`boolean` - `true` if the value is a ZodError, `false` otherwise.
+
 ### interpretZodError
 #### Description
 Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors. The error messages will be in the format `<path>: <message>`. If the error is with function arguments, "arguments.<index>" will be appended to the end of the path. Similarly, if the error is with a function return value, "returnValue" will be appended to the end of the path. Note that for function arguments, only the first seen error will be reported.
