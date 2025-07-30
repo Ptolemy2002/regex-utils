@@ -1,6 +1,6 @@
 {
     "name": "@ptolemy2002/regex-utils",
-    "version": "2.6.2",
+    "version": "3.0.0",
     "private": false,
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -27,9 +27,9 @@
         "release-major": "bash ./scripts/release.sh major"
     },
     "peerDependencies": {
-        "zod": "^3.23.8"
+        "zod": "^4.0.0"
     },
     "devDependencies": {
-        "zod": "^3.23.8"
+        "zod": "^4.0.0"
     }
 }
