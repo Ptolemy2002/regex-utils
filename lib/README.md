@@ -163,7 +163,7 @@ Checks if an unknown value is a ZodError. This is more reliable than using `inst
 
 ### interpretZodError
 #### Description
-Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors. The error messages will be in the format `<path>: <message>`. If the error is with function arguments, "arguments.<index>" will be appended to the end of the path. Similarly, if the error is with a function return value, "returnValue" will be appended to the end of the path. Note that for function arguments, only the first seen error will be reported.
+Given a zod error, interprets it to `null` if no error is found, a single error message if there is a single error, or an array of error messages if there are multiple errors. The error messages will be in the format `<path>: <message>`.
 
 #### Parameters
 - `e` (`ZodError`): The zod error to be interpreted.

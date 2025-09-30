@@ -128,7 +128,7 @@ export function interpretZodError(e: ZodError,
         prefix,
         separator = "."
     }: InterpretZodErrorOptions = {}): string | string[] | null {
-    const { errors } = e;
+    const { issues } = e;
 
     function formatIssue(issue: ZodIssue) {
         const { code, path: _path, message } = issue;
@@ -139,31 +139,19 @@ export function interpretZodError(e: ZodError,
             path = [prefix, ...path];
         } else if (Array.isArray(prefix)) {
             path = [...prefix, ...path];
-        }
-
-        if (code === "invalid_return_type") {
-            const returnTypeIssue = issue.returnTypeError.errors[0];
-            path = [...path, "returnType", ...returnTypeIssue.path];
-
-            return `${path.join(separator)}: ${returnTypeIssue.message}`;
-        } else if (code === "invalid_arguments") {
-            const argumentsIssue = issue.argumentsError.errors[0];
-            path = [...path, "arguments", ...argumentsIssue.path];
-
-            return `${path.join(separator)}: ${argumentsIssue.message}`;
         } 
 
         if (path.length === 0) return message;
         return `${path.join(separator)}: ${message}`;
     }
 
-    if (errors.length === 0) return null;
-    if (errors.length === 1) return formatIssue(errors[0]);
-    return errors.map((e) => formatIssue(e));
+    if (issues.length === 0) return null;
+    if (issues.length === 1) return formatIssue(issues[0]);
+    return issues.map((e) => formatIssue(e));
 }
 
 export type ZodSafeParseable<O> = {
-    safeParse: (v: unknown) => z.SafeParseReturnType<unknown, O>;
+    safeParse: (v: unknown) => z.ZodSafeParseResult<O>;
 };
 
 export function zodValidate<O>(
